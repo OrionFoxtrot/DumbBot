@@ -1,9 +1,3 @@
-// ---------------------------------------------------------------------------
-// NewPing library sketch that interfaces with all but the SRF06 sensor using
-// only one Arduino pin. You can also interface with the SRF06 using one pin
-// if you install a 0.1uf capacitor on the trigger and echo pins of the sensor
-// then tie the trigger pin to the Arduino pin (doesn't work with Teensy).
-// ---------------------------------------------------------------------------
 
 #include <NewPing.h>
 #include <CircularBuffer.hpp>
