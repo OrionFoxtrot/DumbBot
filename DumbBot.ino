@@ -26,6 +26,7 @@ int BR_Sonar_Value = 0;
 // SONAR FUCNTIONS
 void update(){
   FR_Sonar_Buffer.push(Front_Right_Sonar.ping_cm());
+  delay(10); //delay to avoid interference with the sonars
   BR_Sonar_Buffer.push(Rear_Right_Sonar.ping_cm());
 
   for (int i = 0; i < buff_size; i++){
@@ -46,6 +47,7 @@ void dump_sonar_data(){
 
 //DRIVE FUNCTIONS
 int safe_drive_motors(){
+  R_Motor_Speed = R_Motor_Speed*1.17;
   if(L_Motor_Speed > 200){
     return -1;
   }
@@ -88,17 +90,37 @@ void die(){
   delay(99999);
   
 }
+void debug_drive(int a){
+  drive_motor(a,a);
+  delay(99999);
+}
+void debug_drive(int a, int b){
+  drive_motor(a,b);
+  delay(99999);
+}
 //Test Deltas
 int delta = 0;
-int kp = 8;
+
+void loop_(){
+  update();
+  dump_sonar_data();
+  //delay(100);
+}
+
+int kpl = 10;
+int kpr = 10;
 void loop() {
   //die();
+  debug_drive(150,175); // Minimum drive speed arox 130
+  // so 150L = 175R
+  
+  dump_sonar_data();
   update();
 
   delta = int(FR_Sonar_Value) - int(BR_Sonar_Value);
-  Serial.println(delta);
-  L_Motor_Speed = 150 + kp*delta;
-  R_Motor_Speed = 150;
+  //Serial.println(delta);
+  L_Motor_Speed = 130 + kpl*delta;
+  R_Motor_Speed = 130 - kpr*delta;
   if(L_Motor_Speed > R_Motor_Speed){
     digitalWrite(11,HIGH);
   }else{
@@ -107,5 +129,5 @@ void loop() {
   safe_drive_motors();
 
  
-  delay(29);                     // Wait 50ms between pings (about 20 pings/sec). 29ms should be the shortest delay between pings.
+  //delay(29);                     // Wait 50ms between pings (about 20 pings/sec). 29ms should be the shortest delay between pings.
 }
